@@ -10,7 +10,7 @@ Snake::Snake(int length, Coordinate head, Direction direction) {
     int dx[] = {1, 0, -1, 0};
     int dy[] = {0, 1, 0, -1};
 
-    for(int i = 1; 1 <= length - 1; i++) {
+    for(int i = 1; i <= length - 1; i++) {
         Coordinate body = {head.x + i * dx[(int)direction],
                             head.y + i * dy[(int)direction]};
         
