@@ -8,7 +8,7 @@ Snake::Snake(int length, Coordinate head, Direction direction) {
     this->length = length;
 
     int dx[] = {1, 0, -1, 0};
-    int dy[] = {0, 1, 0, -1};
+    int dy[] = {0, -1, 0, 1};
 
     for(int i = 1; i <= length - 1; i++) {
         Coordinate body = {head.x + i * dx[(int)direction],
