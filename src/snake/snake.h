@@ -8,8 +8,12 @@ class Snake {
 private:
     Coordinate head;
     std::vector<Coordinate> body;
-    int len;
+    int length;
     Direction direction;
 public:
-    Snake(int len, Coordinate head, Direction direction);
+    Snake(int length, Coordinate head, Direction direction);
+    Coordinate getHead();
+    std::vector<Coordinate> getBody();
+    int getLength();
+    Direction getDirection();
 };
