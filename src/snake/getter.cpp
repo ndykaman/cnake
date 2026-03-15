@@ -8,7 +8,7 @@ Coordinate Snake::getHead() {
 }
 
 std::vector<Coordinate> Snake::getBody() {
-    return this->getBody();
+    return this->body;
 }
 
 int Snake::getLength() {
