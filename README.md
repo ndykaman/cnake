@@ -79,7 +79,7 @@ cnake/
 Currently, CNAKE can be built by cloning the repository and compiling it with CMake.
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/ndykaman/cnake.git
 cd cnake
 
 mkdir build
