@@ -16,4 +16,5 @@ public:
     std::vector<Coordinate> getBody();
     int getLength();
     Direction getDirection();
+    void move(Direction newDirection);
 };
