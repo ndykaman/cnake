@@ -33,7 +33,9 @@ At the current stage of development, the core grid system and snake representati
   <img src="docs/cnake_preview.png" width="600">
 </p>
 
-*Early development preview showing the snake rendered inside the terminal grid.*
+<p align="center">
+  <em>Early development preview of CNAKE running in the terminal.</em>
+</p>
 
 ---
 
