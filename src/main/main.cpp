@@ -1,20 +1,38 @@
 #include "coordinate/coordinate.h"
 #include "direction/direction.h"
 #include "snake/snake.h"
+#include <cstdlib>
 #include <iostream>
+#include <vector>
 
 int main() {
     Snake * snake = new Snake(5, {3, 6}, Direction::West);
 
+    std::vector<std::vector<char>> grid(16, std::vector<char>(16, '.'));
+
     int direction;
 
     do {
+        system("clear");
         std::cout << "\n";
 
-        std::cout << snake->getHead().x << " " << snake->getHead().y << "\n";
+        for(auto &vc : grid) {
+            for(auto &c : vc) {
+                c = '.';
+            }
+        }
+
+        grid[snake->getHead().x][snake->getHead().y] = '$';
 
         for(auto [x,y] : snake->getBody()) {
-            std::cout << x << " " << y << "\n";
+            grid[x][y] = '#';
+        }
+
+        for(auto vc : grid) {
+            for(auto c : vc) {
+                std::cout << c;
+            }
+            std::cout << "\n";
         }
 
         std::cout << "Enter the direction (N=0, E=1, S=2, W=3), -1 to abort: ";
