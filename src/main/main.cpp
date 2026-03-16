@@ -10,7 +10,7 @@ int main() {
 
     std::vector<std::vector<char>> grid(16, std::vector<char>(16, '.'));
 
-    int direction;
+    char direction;
 
     do {
         system("clear");
@@ -35,13 +35,18 @@ int main() {
             std::cout << "\n";
         }
 
-        std::cout << "Enter the direction (N=0, E=1, S=2, W=3), -1 to abort: ";
+        std::cout << "Enter the direction (n, e, s, w), q to quit: ";
         std::cin >> direction;
 
-        Direction newDirection = static_cast<Direction>(direction);
+        Direction newDirection;
+
+        if(direction == 'n') newDirection = Direction::North;
+        else if (direction == 'e') newDirection = Direction::East;
+        else if(direction == 's') newDirection = Direction::South;
+        else if (direction == 'w') newDirection = Direction::West;
 
         snake->move(newDirection);
-    } while(direction != -1);  
+    } while(direction != 'q');  
 
     delete snake;
     
