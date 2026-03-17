@@ -1,6 +1,6 @@
 #include "direction/direction.h"
 #include "space/space.h"
-#include <cstdlib>
+#include "ui/ui.h"
 #include <iostream>
 
 int main() {
@@ -13,7 +13,7 @@ int main() {
     char direction;
 
     do {
-        system("clear");
+        clearScreen();
 
         space->render();
         space->print();
