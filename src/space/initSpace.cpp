@@ -12,8 +12,8 @@ Space::Space(int nRow, int nCol) {
 
     this->grid.resize(nRow, std::vector<char>(nCol, '.'));
 
-    int minX = 0, maxX = nRow;
-    int minY = 0, maxY = nCol;
+    int minX = INITIAL_SNAKE_LEN - 3, maxX = nRow - INITIAL_SNAKE_LEN + 3;
+    int minY = INITIAL_SNAKE_LEN - 3, maxY = nCol - INITIAL_SNAKE_LEN + 3;
 
     std::random_device rd;
     std::mt19937 gen(rd());
