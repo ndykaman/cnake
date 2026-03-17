@@ -2,5 +2,5 @@
 #include "space/space.h"
 
 void Space::moveSnake(Direction newDirection) {
-    this->snake.move(newDirection);
+    this->snake.move(this->nRow, this->nCol, newDirection);
 }
