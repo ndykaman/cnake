@@ -24,7 +24,7 @@ Space::Space(int nRow, int nCol) {
     int y = distY(gen);
     int d = distD(gen);
 
-    Snake snake(4, {x, y}, static_cast<Direction>(d));
+    Snake snake(nRow, nCol, 4, {x, y}, static_cast<Direction>(d));
 
     this->snake = snake;
 }
