@@ -33,6 +33,8 @@ int main() {
             std::cout << "\nInvalid direction...\n";
             return 0;
         }
+
+        space->moveSnake(newDirection);
     }while (direction != 'q');
 
     delete space;
