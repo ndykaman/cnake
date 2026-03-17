@@ -2,6 +2,12 @@
 #include "direction/direction.h"
 #include "snake/snake.h"
 
+Snake::Snake() {
+    this->length = 1;
+    this->head = {0, 0};
+    this->direction = Direction::East;
+}
+
 Snake::Snake(int length, Coordinate head, Direction direction) {
     this->direction = direction;
     this->head = head;

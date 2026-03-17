@@ -12,6 +12,7 @@ private:
     Direction direction;
 public:
     Snake(int length, Coordinate head, Direction direction);
+    Snake();
     Coordinate getHead();
     std::vector<Coordinate> getBody();
     int getLength();
