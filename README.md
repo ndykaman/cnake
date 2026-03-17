@@ -29,13 +29,9 @@ Below is a preview of **CNAKE** running directly in the terminal.
 
 At the current stage of development, the core grid system and snake representation are already implemented.
 
-<p align="center">
-  <img src="docs/cnake_preview.png" width="600">
-</p>
+![Demo CNAKE](docs/cnake_preview_video.gif)
 
-<p align="center">
-  <em>Early development preview of CNAKE running in the terminal.</em>
-</p>
+*Early development preview of CNAKE running in the terminal.*
 
 ---
 
