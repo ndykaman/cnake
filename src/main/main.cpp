@@ -1,4 +1,6 @@
+#include "direction/direction.h"
 #include "space/space.h"
+#include <cstdlib>
 #include <iostream>
 
 int main() {
@@ -8,7 +10,30 @@ int main() {
 
     Space * space = new Space(r, c);
 
-    space->print();
+    char direction;
+
+    do {
+        system("clear");
+
+        space->render();
+        space->print();
+
+        std::cout << "\nEnter the direction (w, a, s, d), q to quit: ";
+
+        std::cin >> direction;
+
+        Direction newDirection;
+
+        if(direction == 'w') newDirection = Direction::North;
+        else if(direction == 'd') newDirection = Direction::East;
+        else if(direction == 's') newDirection = Direction::South;
+        else if (direction == 'a') newDirection = Direction::West;
+        else if (direction == 'q') break;
+        else {
+            std::cout << "\nInvalid direction...\n";
+            return 0;
+        }
+    }while (direction != 'q');
 
     delete space;
     
