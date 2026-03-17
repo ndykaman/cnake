@@ -1,5 +1,6 @@
 #pragma once
 
+#include "direction/direction.h"
 #include "snake/snake.h"
 #include <vector>
 
@@ -13,4 +14,5 @@ public:
     Space(int nRow, int nCol);
     void render();
     void print();
+    void moveSnake(Direction newDirection);
 };
