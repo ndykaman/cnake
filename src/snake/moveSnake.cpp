@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <vector>
 
-void Snake::move(Direction newDirection) {
+void Snake::move(int nRow, int nCol, Direction newDirection) {
     const Coordinate &curHead = this->head;
     const Direction &curDirection = this->direction;
     std::vector<Coordinate> &body = this->body;
@@ -30,6 +30,12 @@ void Snake::move(Direction newDirection) {
             newHead.y = curHead.y - 1;
             break;
     }
+
+    newHead.x %= nRow;
+    newHead.y %= nCol;
+
+    if(newHead.x < 0) newHead.x += nRow;
+    if(newHead.y < 0) newHead.y += nCol;
 
     for(int i = this->length - 2; i > 0; i--) {
         body[i] = body[i - 1];
