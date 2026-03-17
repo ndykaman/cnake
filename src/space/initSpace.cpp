@@ -4,6 +4,8 @@
 #include <vector>
 #include <random>
 
+const int INITIAL_SNAKE_LEN = 5;
+
 Space::Space(int nRow, int nCol) {
     this->nRow = nRow;
     this->nCol = nCol;
@@ -24,7 +26,7 @@ Space::Space(int nRow, int nCol) {
     int y = distY(gen);
     int d = distD(gen);
 
-    Snake snake(nRow, nCol, 4, {x, y}, static_cast<Direction>(d));
+    Snake snake(nRow, nCol, INITIAL_SNAKE_LEN, {x, y}, static_cast<Direction>(d));
 
     this->snake = snake;
 }
