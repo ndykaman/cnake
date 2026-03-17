@@ -12,24 +12,13 @@ void Snake::move(int nRow, int nCol, Direction newDirection) {
 
     if(abs((int)(curDirection) - (int)newDirection) == 2) return;
 
-    switch ((int)newDirection) {
-        case 0:
-            newHead.x = curHead.x - 1;
-            newHead.y = curHead.y;
-            break;
-        case 1:
-            newHead.x = curHead.x;
-            newHead.y = curHead.y + 1;
-            break;
-        case 2:
-            newHead.x = curHead.x + 1;
-            newHead.y = curHead.y;
-            break;
-        case 3:
-            newHead.x = curHead.x;
-            newHead.y = curHead.y - 1;
-            break;
-    }
+    int dx[] = {-1, 0, 1, 0};
+    int dy[] = {0, 1, 0, -1};
+
+    newHead = {
+        curHead.x + dx[(int)newDirection],
+        curHead.y + dy[(int)newDirection]
+    };
 
     newHead.x %= nRow;
     newHead.y %= nCol;
