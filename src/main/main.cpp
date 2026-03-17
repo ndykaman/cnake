@@ -85,7 +85,7 @@ int main() {
             tcflush(STDIN_FILENO, TCIFLUSH); 
         #endif
 
-        SLEEP(150); 
+        SLEEP(200); 
     }
 
     delete space;
