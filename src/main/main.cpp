@@ -35,15 +35,16 @@ int main() {
             std::cout << "\n";
         }
 
-        std::cout << "Enter the direction (n, e, s, w), q to quit: ";
+        std::cout << "Enter the direction (w, a, s, d), q to quit: ";
         std::cin >> direction;
 
         Direction newDirection;
 
-        if(direction == 'n') newDirection = Direction::North;
-        else if (direction == 'e') newDirection = Direction::East;
+        if(direction == 'w') newDirection = Direction::North;
+        else if (direction == 'd') newDirection = Direction::East;
         else if(direction == 's') newDirection = Direction::South;
-        else if (direction == 'w') newDirection = Direction::West;
+        else if (direction == 'a') newDirection = Direction::West;
+        else return 0;
 
         snake->move(newDirection);
     } while(direction != 'q');  
