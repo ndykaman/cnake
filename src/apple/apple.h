@@ -6,9 +6,11 @@ class Apple {
 private:
     Coordinate coordinate;
     int value;
+
 public:
     Apple();
     Apple(int nRow, int nCol);
-    Coordinate getCoordinate();
-    int getValue();
+
+    Coordinate getCoordinate() const;
+    int getValue() const;
 };
