@@ -1,14 +1,10 @@
 #include "apple.h"
 #include <random>
 
-
-
 Apple::Apple() {
     coordinate = {0, 0};
     value = 1;
 }
-
-
 
 Apple::Apple(int nRow, int nCol) {
     int minX = 0, maxX = nRow - 1;
@@ -28,13 +24,9 @@ Apple::Apple(int nRow, int nCol) {
     value = 1;
 }
 
-
-
 Coordinate Apple::getCoordinate() const {
     return coordinate;
 }
-
-
 
 int Apple::getValue() const {
     return value;
