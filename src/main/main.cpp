@@ -92,16 +92,6 @@ Direction getInputDirection(Direction currentDir, bool& running) {
     return currentDir;
 }
 
-// ======================= System =======================
-
-void flushInputBuffer() {
-#ifdef _WIN32
-    while (_kbhit()) _getch();
-#else
-    tcflush(STDIN_FILENO, TCIFLUSH);
-#endif
-}
-
 // ======================= Game Loop =======================
 
 void gameLoop(Space& space) {
@@ -117,7 +107,6 @@ void gameLoop(Space& space) {
         space.render();
         space.print();
 
-        flushInputBuffer();
         SLEEP(150);
     }
 }
