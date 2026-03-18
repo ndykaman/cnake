@@ -3,7 +3,6 @@
 #include "ui/ui.h"
 #include <iostream>
 #include <cmath>
-#include <cstdlib>
 
 #ifdef _WIN32
 #include <conio.h>
@@ -146,20 +145,24 @@ void enableANSI()
 #endif
 }
 
+void fullClearScreen() {
+    std::cout << "\033[2J\033[H" << std::flush;
+}
+
 // ======================= Main =======================
 
 int main()
 {
     enableANSI();
 
-    system("cls");
+    fullClearScreen();
 
     hideCursor();
 
     int r, c;
     inputGridSize(r, c);
 
-    system("cls");
+    fullClearScreen();
 
     Space space(r, c);
 
