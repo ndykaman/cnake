@@ -18,4 +18,5 @@ public:
     int getLength();
     Direction getDirection();
     void move(int nRow, int nCol, Direction newDirection);
+    void eatApple();
 };
