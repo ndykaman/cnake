@@ -3,6 +3,7 @@
 #include "ui/ui.h"
 #include <iostream>
 #include <cmath>
+#include <cstdlib>
 
 #ifdef _WIN32
 #include <conio.h>
@@ -151,10 +152,14 @@ int main()
 {
     enableANSI();
 
+    system("cls");
+
     hideCursor();
 
     int r, c;
     inputGridSize(r, c);
+
+    system("cls");
 
     Space space(r, c);
 
