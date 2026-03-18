@@ -1,3 +1,4 @@
+#include "apple/apple.h"
 #include "coordinate/coordinate.h"
 #include "direction/direction.h"
 #include "space/space.h"
@@ -14,6 +15,9 @@ void Space::render() {
 
     const Coordinate &head = this->snake.getHead();
     const Direction &direction = this->snake.getDirection();
+    const Coordinate &apple = this->apple.getCoordinate();
+
+    grid[apple.x][apple.y] = '@';
 
     switch ((int)direction) {
         case 0:
