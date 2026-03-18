@@ -1,9 +1,3 @@
-/*
-
-Just for your information, in the code in this section, I asked ChatGPT for help with a cross-platform screen-clearing function.
-
-*/
-
 #include "ui.h"
 
 #include <iostream>

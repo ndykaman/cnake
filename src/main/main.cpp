@@ -3,13 +3,6 @@
 #include "ui/ui.h"
 #include <iostream>
 
-/*
-
-I was a bit confused when creating the loop mechanism for the game, 
-so I asked Gemini AI for help with the main loop mechanism for the game—a cross-platform one, of course.
-
-*/
-
 #ifdef _WIN32
     #include <conio.h>
     #include <windows.h>
