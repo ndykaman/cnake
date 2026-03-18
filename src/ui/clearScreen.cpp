@@ -1,3 +1,9 @@
+/*
+
+Just for your information, in the code in this section, I asked ChatGPT for help with a cross-platform screen-clearing function.
+
+*/
+
 #include "ui.h"
 
 #include <iostream>
@@ -12,7 +18,6 @@
 
 void clearScreen() {
 #ifdef OS_WINDOWS
-    // Static HANDLE & buffer info supaya ga perlu ambil ulang tiap frame
     static HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     static CONSOLE_SCREEN_BUFFER_INFO csbi;
     static DWORD cellCount;
@@ -31,7 +36,7 @@ void clearScreen() {
     FillConsoleOutputAttribute(hOut, csbi.wAttributes, cellCount, homeCoords, &count);
     SetConsoleCursorPosition(hOut, homeCoords);
 
-#else // OS_UNIX
+#else
     std::cout << "\033[2J\033[H" << std::flush;
 #endif
 }
