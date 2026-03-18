@@ -1,4 +1,5 @@
 #include "space.h"
+#include <iostream>
 
 const int INITIAL_SNAKE_LEN = 5;
 
@@ -52,5 +53,18 @@ void Space::render() {
 
     for(auto [x,y] : body) {
         grid[x][y] = '#';
+    }
+}
+
+
+
+void Space::print() {
+    const std::vector<std::vector<char>> &grid = this->grid;
+
+    for(auto vc : grid) {
+        for(auto c : vc) {
+            std::cout << c;
+        }
+        std::cout << "\n";
     }
 }
