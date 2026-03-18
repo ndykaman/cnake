@@ -18,3 +18,10 @@ target_include_directories(${PROJECT_NAME}
     PRIVATE
     src
 )
+
+# Static linking (libgcc, libstdc++, winpthread)
+if (MINGW)
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        LINK_FLAGS "-static -static-libgcc -static-libstdc++"
+    )
+endif()
