@@ -1,113 +1,80 @@
 #include "space.h"
 #include <iostream>
 
-const int INITIAL_SNAKE_LEN = 5;
-
-Space::Space(int nRow, int nCol) {
-    this->nRow = nRow;
-    this->nCol = nCol;
-
-    this->grid.resize(nRow, std::vector<char>(nCol, '.'));
-
-    Snake snake(nRow, nCol);
-
-    Apple apple(nRow, nCol);
-
-    this->apple = apple;
-    this->snake = snake;
+Space::Space(int nRow, int nCol) : nRow(nRow), nCol(nCol), snake(nRow, nCol), apple(nRow, nCol) {
+    grid.resize(nRow, std::vector<char>(nCol, '.'));
 }
 
-
-
-void Space::render() {
-    std::vector<std::vector<char>> &grid = this->grid;
-
-    for(auto &vc : grid) {
-        for(auto &c : vc) {
-            c = '.';
-        }
-    }
-
-    const Coordinate &head = this->snake.getHead();
-    const Direction &direction = this->snake.getDirection();
-    const Coordinate &apple = this->apple.getCoordinate();
-
-    grid[apple.x][apple.y] = '@';
-
-    switch ((int)direction) {
-        case 0:
-            grid[head.x][head.y] = '^';
-            break;
-        case 1:
-            grid[head.x][head.y] = '>';
-            break;
-        case 2:
-            grid[head.x][head.y] = 'v';
-            break;
-        case 3:
-            grid[head.x][head.y] = '<';
-            break;
-    }
-
-    const std::vector<Coordinate> &body = this->snake.getBody();
-
-    for(auto [x,y] : body) {
-        grid[x][y] = '#';
-    }
+// helper wrap
+int Space::wrap(int value, int mod) const {
+    value %= mod;
+    if (value < 0) value += mod;
+    return value;
 }
 
-
-
-void Space::print() {
-    const std::vector<std::vector<char>> &grid = this->grid;
-
-    for(auto vc : grid) {
-        for(auto c : vc) {
-            std::cout << c;
-        }
-        std::cout << "\n";
-    }
-}
-
-
-
-void Space::moveSnake(Direction newDirection) {
-    const Coordinate &curHead = this->snake.getHead();
-    const Direction &curDirection = this->snake.getDirection();
-    const Coordinate &apple = this->apple.getCoordinate();
+// update snake & handle apple
+void Space::updateSnake(Direction newDirection) {
+    const Coordinate &curHead = snake.getHead();
+    const Coordinate &appleCoord = apple.getCoordinate();
     Coordinate newHead;
 
-    if(abs((int)(curDirection) - (int)newDirection) == 2) return;
+    // larang snake balik arah
+    if (abs((int)snake.getDirection() - (int)newDirection) == 2) return;
 
-    int dx[] = {-1, 0, 1, 0};
-    int dy[] = {0, 1, 0, -1};
+    // arah gerak
+    const int DX[4] = {-1, 0, 1, 0};
+    const int DY[4] = {0, 1, 0, -1};
 
     newHead = {
-        curHead.x + dx[(int)newDirection],
-        curHead.y + dy[(int)newDirection]
+        wrap(curHead.x + DX[(int)newDirection], nRow),
+        wrap(curHead.y + DY[(int)newDirection], nCol)
     };
 
-    newHead.x %= nRow;
-    newHead.y %= nCol;
-
-    if(newHead.x < 0) newHead.x += nRow;
-    if(newHead.y < 0) newHead.y += nCol;
-
-    if(newHead.x == apple.x && newHead.y == apple.y) {
-        this->snake.eatApple();
-        this->generateRandomApple();
+    // makan apel
+    if (newHead.x == appleCoord.x && newHead.y == appleCoord.y) {
+        snake.eatApple();
+        spawnApple();
     }
 
-    this->snake.move(this->nRow, this->nCol, newDirection);
+    snake.move(nRow, nCol, newDirection);
 }
 
+// generate apple baru
+void Space::spawnApple() {
+    apple = Apple(nRow, nCol);
+}
 
+// render ke grid internal
+void Space::render() {
+    // clear grid
+    for (auto &row : grid)
+        for (auto &c : row) c = '.';
 
-void Space::generateRandomApple() {
-    int nRow = this->nRow;
-    int nCol = this->nCol;
+    const Coordinate &head = snake.getHead();
+    const Direction &dir = snake.getDirection();
+    const Coordinate &appleCoord = apple.getCoordinate();
+    const auto &body = snake.getBody();
 
-    Apple newApple(nRow, nCol);
+    // apple
+    grid[appleCoord.x][appleCoord.y] = '@';
 
-    this->apple = newApple;
+    // head
+    switch ((int)dir) {
+        case 0: grid[head.x][head.y] = '^'; break;
+        case 1: grid[head.x][head.y] = '>'; break;
+        case 2: grid[head.x][head.y] = 'v'; break;
+        case 3: grid[head.x][head.y] = '<'; break;
+    }
+
+    // body
+    for (auto [x, y] : body)
+        grid[x][y] = '#';
+}
+
+// print ke console
+void Space::print() const {
+    for (const auto &row : grid) {
+        for (const auto &c : row) std::cout << c;
+        std::cout << "\n";
+    }
 }
