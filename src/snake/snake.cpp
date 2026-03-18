@@ -100,3 +100,21 @@ void Snake::eatApple() {
     length++;
     this->body.push_back(newTail);
 }
+
+
+
+Coordinate Snake::getHead() {
+    return this->head;
+}
+
+std::vector<Coordinate> Snake::getBody() {
+    return this->body;
+}
+
+int Snake::getLength() {
+    return this->length;
+}
+
+Direction Snake::getDirection() {
+    return this->direction;
+}
