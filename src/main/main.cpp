@@ -80,7 +80,7 @@ int main() {
             }
         }
 
-        space->moveSnake(currentDir);
+        space->updateSnake(currentDir);
         
         clearScreen();
         space->render();
