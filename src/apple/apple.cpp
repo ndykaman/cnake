@@ -1,9 +1,9 @@
-#include "apple/apple.h"
+#include "apple.h"
 #include <random>
 
 Apple::Apple() {
-    this->coordinate = {0, 0};
-    this->value = 1;
+    coordinate = {0, 0};
+    value = 1;
 }
 
 Apple::Apple(int nRow, int nCol) {
@@ -19,7 +19,7 @@ Apple::Apple(int nRow, int nCol) {
     int x = distX(gen);
     int y = distY(gen);
 
-    this->coordinate = {x, y};
+    coordinate = {x, y};
 
-    this->value = 1;
+    value = 1;
 }
