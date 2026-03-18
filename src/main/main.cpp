@@ -68,7 +68,7 @@ void hideCursor()
 
 void showCursor()
 {
-    std::cout << "\e[?25h";
+    std::cout << "\033[?25l";
 }
 
 // ======================= Input =======================
@@ -103,6 +103,8 @@ Direction getInputDirection(Direction currentDir, bool &running)
             currentDir = inputDir;
         }
     }
+
+    return currentDir;
 }
 
 // ======================= Game Loop =======================
@@ -126,12 +128,20 @@ void gameLoop(Space &space)
     }
 }
 
-void enableANSI() {
+void enableANSI()
+{
 #ifdef _WIN32
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     DWORD dwMode = 0;
     GetConsoleMode(hOut, &dwMode);
-    SetConsoleMode(hOut, dwMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+    if (hOut != INVALID_HANDLE_VALUE)
+    {
+        DWORD dwMode = 0;
+        if (GetConsoleMode(hOut, &dwMode))
+        {
+            SetConsoleMode(hOut, dwMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+        }
+    }
 #endif
 }
 
@@ -140,7 +150,7 @@ void enableANSI() {
 int main()
 {
     enableANSI();
-    
+
     hideCursor();
 
     int r, c;
