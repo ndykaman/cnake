@@ -6,6 +6,8 @@ Apple::Apple() {
     value = 1;
 }
 
+
+
 Apple::Apple(int nRow, int nCol) {
     int minX = 0, maxX = nRow - 1;
     int minY = 0, maxY = nCol - 1;
@@ -22,4 +24,10 @@ Apple::Apple(int nRow, int nCol) {
     coordinate = {x, y};
 
     value = 1;
+}
+
+
+
+Coordinate Apple::getCoordinate() const {
+    return coordinate;
 }
