@@ -17,4 +17,5 @@ public:
     void render();
     void print();
     void moveSnake(Direction newDirection);
+    void generateRandomApple();
 };
