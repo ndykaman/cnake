@@ -6,17 +6,21 @@
 
 class Snake {
 private:
-    Coordinate head;
-    std::vector<Coordinate> body;
     int length;
+    Coordinate head;
     Direction direction;
+    std::vector<Coordinate> body;
 public:
-    Snake(int nRow, int nCol);
     Snake();
-    Coordinate getHead();
-    std::vector<Coordinate> getBody();
+    Snake(int nRow, int nCol);
+
     int getLength();
+    Coordinate getHead();
     Direction getDirection();
+    std::vector<Coordinate> getBody();
+
     void move(int nRow, int nCol, Direction newDirection);
     void eatApple();
 };
+
+
