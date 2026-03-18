@@ -83,7 +83,6 @@ int main() {
         space->moveSnake(currentDir);
         
         clearScreen();
-        space->generateRandomApple();
         space->render();
         space->print();
 
