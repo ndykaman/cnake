@@ -1,5 +1,6 @@
 #pragma once
 
+#include "apple/apple.h"
 #include "direction/direction.h"
 #include "snake/snake.h"
 #include <vector>
@@ -10,6 +11,7 @@ private:
     int nRow;
     int nCol;
     Snake snake;
+    Apple apple;
 public:
     Space(int nRow, int nCol);
     void render();
