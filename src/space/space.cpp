@@ -100,3 +100,14 @@ void Space::moveSnake(Direction newDirection) {
 
     this->snake.move(this->nRow, this->nCol, newDirection);
 }
+
+
+
+void Space::generateRandomApple() {
+    int nRow = this->nRow;
+    int nCol = this->nCol;
+
+    Apple newApple(nRow, nCol);
+
+    this->apple = newApple;
+}
