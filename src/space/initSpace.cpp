@@ -1,3 +1,4 @@
+#include "apple/apple.h"
 #include "snake/snake.h"
 #include "space/space.h"
 #include <vector>
@@ -12,5 +13,8 @@ Space::Space(int nRow, int nCol) {
 
     Snake snake(nRow, nCol);
 
+    Apple apple(nRow, nCol);
+
+    this->apple = apple;
     this->snake = snake;
 }
