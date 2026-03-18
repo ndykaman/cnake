@@ -1,6 +1,9 @@
 #include "coordinate/coordinate.h"
 #include "direction/direction.h"
 #include "snake/snake.h"
+#include <random>
+
+const int INITIAL_SNAKE_LEN = 5;
 
 Snake::Snake() {
     this->length = 1;
@@ -8,10 +11,26 @@ Snake::Snake() {
     this->direction = Direction::East;
 }
 
-Snake::Snake(int nRow, int nCol, int length, Coordinate head, Direction direction) {
-    this->direction = direction;
-    this->head = head;
-    this->length = length;
+Snake::Snake(int nRow, int nCol) {
+    this->length = INITIAL_SNAKE_LEN;
+
+    int minX = INITIAL_SNAKE_LEN - 3, maxX = nRow - INITIAL_SNAKE_LEN + 3;
+    int minY = INITIAL_SNAKE_LEN - 3, maxY = nCol - INITIAL_SNAKE_LEN + 3;
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+
+    std::uniform_int_distribution<> distX(minX, maxX);
+    std::uniform_int_distribution<> distY(minY, maxY);
+    std::uniform_int_distribution<> distD(0, 3);
+
+    int x = distX(gen);
+    int y = distY(gen);
+    int d = distD(gen);
+
+    this->head = {x, y};
+
+    this->direction = static_cast<Direction>(d);
 
     int dx[] = {1, 0, -1, 0};
     int dy[] = {0, -1, 0, 1};

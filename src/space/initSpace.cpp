@@ -1,8 +1,6 @@
-#include "direction/direction.h"
 #include "snake/snake.h"
 #include "space/space.h"
 #include <vector>
-#include <random>
 
 const int INITIAL_SNAKE_LEN = 5;
 
@@ -12,21 +10,7 @@ Space::Space(int nRow, int nCol) {
 
     this->grid.resize(nRow, std::vector<char>(nCol, '.'));
 
-    int minX = INITIAL_SNAKE_LEN - 3, maxX = nRow - INITIAL_SNAKE_LEN + 3;
-    int minY = INITIAL_SNAKE_LEN - 3, maxY = nCol - INITIAL_SNAKE_LEN + 3;
-
-    std::random_device rd;
-    std::mt19937 gen(rd());
-
-    std::uniform_int_distribution<> distX(minX, maxX);
-    std::uniform_int_distribution<> distY(minY, maxY);
-    std::uniform_int_distribution<> distD(0, 3);
-
-    int x = distX(gen);
-    int y = distY(gen);
-    int d = distD(gen);
-
-    Snake snake(nRow, nCol, INITIAL_SNAKE_LEN, {x, y}, static_cast<Direction>(d));
+    Snake snake(nRow, nCol);
 
     this->snake = snake;
 }

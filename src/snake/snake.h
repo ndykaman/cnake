@@ -11,7 +11,7 @@ private:
     int length;
     Direction direction;
 public:
-    Snake(int nRow, int nCol, int length, Coordinate head, Direction direction);
+    Snake(int nRow, int nCol);
     Snake();
     Coordinate getHead();
     std::vector<Coordinate> getBody();
