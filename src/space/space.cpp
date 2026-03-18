@@ -1,7 +1,4 @@
-#include "apple/apple.h"
-#include "snake/snake.h"
-#include "space/space.h"
-#include <vector>
+#include "space.h"
 
 const int INITIAL_SNAKE_LEN = 5;
 
@@ -18,3 +15,6 @@ Space::Space(int nRow, int nCol) {
     this->apple = apple;
     this->snake = snake;
 }
+
+
+
