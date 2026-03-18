@@ -6,21 +6,20 @@
 
 class Snake {
 private:
-    int length;
-    Coordinate head;
-    Direction direction;
-    std::vector<Coordinate> body;
+    Coordinate head;                      // posisi kepala
+    std::vector<Coordinate> body;         // badan (tanpa head)
+    Direction direction;                  // arah gerak
+    int length;                           // total panjang (head + body)
+
 public:
     Snake();
     Snake(int nRow, int nCol);
 
-    int getLength();
-    Coordinate getHead();
-    Direction getDirection();
-    std::vector<Coordinate> getBody();
+    int getLength() const;
+    Coordinate getHead() const;
+    Direction getDirection() const;
+    const std::vector<Coordinate>& getBody() const;
 
     void move(int nRow, int nCol, Direction newDirection);
     void eatApple();
 };
-
-

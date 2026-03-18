@@ -3,17 +3,36 @@
 
 const int INITIAL_SNAKE_LEN = 5;
 
-Snake::Snake() {
-    this->length = 1;
-    this->head = {0, 0};
-    this->direction = Direction::East;
+// arah gerak ke depan (movement)
+const int MOVE_DX[4] = {-1, 0, 1, 0};
+const int MOVE_DY[4] = {0, 1, 0, -1};
+
+// arah kebalikan (untuk nyusun badan awal)
+const int BODY_DX[4] = {1, 0, -1, 0};
+const int BODY_DY[4] = {0, -1, 0, 1};
+
+// helper wrap biar gak ngulang
+int wrap(int value, int mod) {
+    value %= mod;
+    if (value < 0) value += mod;
+    return value;
 }
 
-Snake::Snake(int nRow, int nCol) {
-    this->length = INITIAL_SNAKE_LEN;
+// default constructor
+Snake::Snake() {
+    length = 1;
+    head = {0, 0};
+    direction = Direction::East;
+}
 
-    int minX = INITIAL_SNAKE_LEN - 3, maxX = nRow - INITIAL_SNAKE_LEN + 3;
-    int minY = INITIAL_SNAKE_LEN - 3, maxY = nCol - INITIAL_SNAKE_LEN + 3;
+// constructor dengan random spawn
+Snake::Snake(int nRow, int nCol) {
+    length = INITIAL_SNAKE_LEN;
+
+    int minX = INITIAL_SNAKE_LEN - 3;
+    int maxX = nRow - INITIAL_SNAKE_LEN + 3;
+    int minY = INITIAL_SNAKE_LEN - 3;
+    int maxY = nCol - INITIAL_SNAKE_LEN + 3;
 
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -26,95 +45,75 @@ Snake::Snake(int nRow, int nCol) {
     int y = distY(gen);
     int d = distD(gen);
 
-    this->head = {x, y};
+    head = {x, y};
+    direction = static_cast<Direction>(d);
 
-    this->direction = static_cast<Direction>(d);
+    // build body ke arah belakang dari head
+    for (int i = 1; i < length; i++) {
+        int newX = head.x + i * BODY_DX[(int)direction];
+        int newY = head.y + i * BODY_DY[(int)direction];
 
-    int dx[] = {1, 0, -1, 0};
-    int dy[] = {0, -1, 0, 1};
+        newX = wrap(newX, nRow);
+        newY = wrap(newY, nCol);
 
-    for(int i = 1; i <= length - 1; i++) {
-        int x = head.x + i * dx[(int)direction];
-        int y = head.y + i * dy[(int)direction];
-
-        x %= nRow;
-        y %= nCol;
-
-        if(x < 0) x += nRow;
-        if(y < 0) y += nCol;
-
-        Coordinate body = {x, y};
-        
-        this->body.push_back(body);
+        body.push_back({newX, newY});
     }
 }
 
-
-
+// gerak snake
 void Snake::move(int nRow, int nCol, Direction newDirection) {
-    const Coordinate &curHead = this->head;
-    const Direction &curDirection = this->direction;
-    std::vector<Coordinate> &body = this->body;
-    Coordinate newHead;
+    Direction curDirection = direction;
 
-    if(abs((int)(curDirection) - (int)newDirection) == 2) return;
+    bool isOpposite = abs((int)curDirection - (int)newDirection) == 2;
+    if (isOpposite) return;
 
-    int dx[] = {-1, 0, 1, 0};
-    int dy[] = {0, 1, 0, -1};
-
-    newHead = {
-        curHead.x + dx[(int)newDirection],
-        curHead.y + dy[(int)newDirection]
+    Coordinate newHead = {
+        head.x + MOVE_DX[(int)newDirection],
+        head.y + MOVE_DY[(int)newDirection]
     };
 
-    newHead.x %= nRow;
-    newHead.y %= nCol;
+    newHead.x = wrap(newHead.x, nRow);
+    newHead.y = wrap(newHead.y, nCol);
 
-    if(newHead.x < 0) newHead.x += nRow;
-    if(newHead.y < 0) newHead.y += nCol;
-
-    for(int i = this->length - 2; i > 0; i--) {
+    for (int i = length - 2; i > 0; i--) {
         body[i] = body[i - 1];
     }
 
-    body[0] = curHead;
-    this->head = newHead;
-    this->direction = newDirection;
+    body[0] = head;
+    head = newHead;
+    direction = newDirection;
 }
 
-
-
+// makan apel → nambah panjang
 void Snake::eatApple() {
-    int &length = this->length;
-    const Coordinate &tail = this->body.back();
-    const Coordinate &beforeTail = this->body[length - 2];
+    const Coordinate &tail = body.back();
+    const Coordinate &beforeTail = body[length - 2];
 
     int dx = tail.x - beforeTail.x;
     int dy = tail.y - beforeTail.y;
 
     Coordinate newTail = {
-        dx + tail.x,
-        dy + tail.y
+        tail.x + dx,
+        tail.y + dy
     };
 
     length++;
-    this->body.push_back(newTail);
+    body.push_back(newTail);
 }
 
-
-
-Coordinate Snake::getHead() {
-    return this->head;
+// getter
+Coordinate Snake::getHead() const {
+    return head;
 }
 
-std::vector<Coordinate> Snake::getBody() {
-    return this->body;
+const std::vector<Coordinate>& Snake::getBody() const {
+    return body;
 }
 
-int Snake::getLength() {
-    return this->length;
+int Snake::getLength() const {
+    return length;
 }
 
-Direction Snake::getDirection() {
-    return this->direction;
+Direction Snake::getDirection() const {
+    return direction;
 }
