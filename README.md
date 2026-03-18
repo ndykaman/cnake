@@ -3,7 +3,7 @@
 ![C++](https://img.shields.io/badge/C%2B%2B-20-blue)
 ![Build System](https://img.shields.io/badge/build-CMake-orange)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Status](https://img.shields.io/badge/status-early%20development-red)
+![Status](https://img.shields.io/badge/status-in%20progress-yellow)
 ![Terminal Game](https://img.shields.io/badge/interface-terminal-black)
 ![Platform](https://img.shields.io/badge/platform-cross--platform-blue)
 
