@@ -81,3 +81,22 @@ void Snake::move(int nRow, int nCol, Direction newDirection) {
     this->head = newHead;
     this->direction = newDirection;
 }
+
+
+
+void Snake::eatApple() {
+    int &length = this->length;
+    const Coordinate &tail = this->body.back();
+    const Coordinate &beforeTail = this->body[length - 2];
+
+    int dx = tail.x - beforeTail.x;
+    int dy = tail.y - beforeTail.y;
+
+    Coordinate newTail = {
+        dx + tail.x,
+        dy + tail.y
+    };
+
+    length++;
+    this->body.push_back(newTail);
+}
