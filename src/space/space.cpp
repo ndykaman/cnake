@@ -37,7 +37,7 @@ void Space::updateSnake(Direction newDirection) {
     snake.move(nRow, nCol, newDirection);
 
     if (ateApple) {
-        snake.grow(apple);
+        snake.grow(apple, nRow, nCol);
         spawnApple();
     }
 }
@@ -90,7 +90,10 @@ void Space::render() {
     constexpr char HEAD_CHAR[4] = {'^', '>', 'v', '<'};
     grid[head.x][head.y] = HEAD_CHAR[(int)dir];
 
-    for (const auto& [x, y] : body) grid[x][y] = '#';
+    for (const auto& [x, y] : body) {
+        if (x >= 0 && x < nRow && y >= 0 && y < nCol)
+            grid[x][y] = '#';
+    }
 }
 
 void Space::print() const {
