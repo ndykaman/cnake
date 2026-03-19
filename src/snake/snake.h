@@ -41,7 +41,7 @@ public:
     void move(int nRow, int nCol, Direction newDirection);
 
     // Extends the snake's tail by `apple.getValue()` segments and updates length.
-    void grow(const Apple& apple);
+    void grow(const Apple& apple, int nRow, int nCol);
 
     // Marks the snake as dead after a self-collision.
     void kill();
