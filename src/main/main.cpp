@@ -62,7 +62,15 @@ int _getch()
 // ======================= UI =======================
 void hideCursor() { std::cout << "\033[?25l"; }
 void showCursor() { std::cout << "\033[?25h"; }
-void fullClearScreen() { std::cout << "\033[2J\033[H" << std::flush; }
+// void fullClearScreen() { std::cout << "\033[2J\033[H" << std::flush; }
+
+void fullClearScreen() {
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+}
 
 void enableANSI()
 {
