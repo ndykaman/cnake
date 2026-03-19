@@ -111,7 +111,7 @@ bool gameLoop(Space &space)
     Direction currentDir = Direction::East;
     bool running = true;
 
-    while (running)
+    while (running && space.isSnakeAlive())
     {
         currentDir = getInputDirection(currentDir, running);
 
