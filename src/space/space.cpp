@@ -36,6 +36,13 @@ void Space::updateSnake(Direction newDirection) {
         spawnApple();
     }
 
+    // nabrak badan sendiri
+    for(auto [x,y] : snake.getBody()) {
+        if(newHead.x == x && newHead.y == y) {
+            snake.dead();
+        }
+    }
+
     snake.move(nRow, nCol, newDirection);
 }
 
