@@ -23,6 +23,7 @@ Snake::Snake() {
     length = 1;
     head = {0, 0};
     direction = Direction::East;
+    status = SnakeStatus::Alive;
 }
 
 // constructor dengan random spawn
@@ -47,6 +48,7 @@ Snake::Snake(int nRow, int nCol) {
 
     head = {x, y};
     direction = static_cast<Direction>(d);
+    status = SnakeStatus::Alive;
 
     // build body ke arah belakang dari head
     for (int i = 1; i < length; i++) {

@@ -4,12 +4,18 @@
 #include "direction/direction.h"
 #include <vector>
 
+enum class SnakeStatus {
+    Alive,
+    Dead
+};
+
 class Snake {
 private:
     Coordinate head;                      // posisi kepala
     std::vector<Coordinate> body;         // badan (tanpa head)
     Direction direction;                  // arah gerak
     int length;                           // total panjang (head + body)
+    SnakeStatus status;                   // status ular
 
 public:
     Snake();
