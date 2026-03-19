@@ -19,9 +19,16 @@ bool runGameLoop(Space& space) {
     bool      running    = true;
 
     while (running) {
-        currentDir = pollInput(currentDir, running);
+        Direction newDir = pollInput(currentDir, running);
 
-        space.updateSnake(currentDir);
+        if(abs((int)newDir - (int)currentDir) == 2) {
+          space.updateSnake(currentDir);
+        } else {
+          space.updateSnake(newDir);
+          currentDir = newDir;
+        }
+
+        // space.updateSnake(currentDir);
 
         // Redraw in-place each tick to avoid full-screen flicker.
         clearScreenFast();
