@@ -60,7 +60,6 @@ int _getch()
 #endif
 
 // ======================= UI =======================
-
 void hideCursor() { std::cout << "\033[?25l"; }
 void showCursor() { std::cout << "\033[?25h"; }
 void fullClearScreen() { std::cout << "\033[2J\033[H" << std::flush; }
@@ -83,15 +82,11 @@ void enableANSI()
 void waitAnyKey()
 {
     std::cout << "\nPress any key to continue...";
-    while (!_kbhit())
-    {
-        SLEEP(50);
-    }
+    while (!_kbhit()) { SLEEP(50); }
     _getch();
 }
 
 // ======================= Input / Game Loop =======================
-
 Direction getInputDirection(Direction currentDir, bool &running)
 {
     while (_kbhit())
@@ -99,26 +94,19 @@ Direction getInputDirection(Direction currentDir, bool &running)
         char key = _getch();
         Direction inputDir = currentDir;
 
-        if (key == 'w')
-            inputDir = Direction::North;
-        else if (key == 'd')
-            inputDir = Direction::East;
-        else if (key == 's')
-            inputDir = Direction::South;
-        else if (key == 'a')
-            inputDir = Direction::West;
-        else if (key == 'q')
-            running = false;
+        if (key == 'w') inputDir = Direction::North;
+        else if (key == 'd') inputDir = Direction::East;
+        else if (key == 's') inputDir = Direction::South;
+        else if (key == 'a') inputDir = Direction::West;
+        else if (key == 'q') running = false;
 
         if (std::abs((int)inputDir - (int)currentDir) != 2)
-        {
             currentDir = inputDir;
-        }
     }
     return currentDir;
 }
 
-void gameLoop(Space &space)
+bool gameLoop(Space &space)
 {
     Direction currentDir = Direction::East;
     bool running = true;
@@ -135,29 +123,30 @@ void gameLoop(Space &space)
 
         SLEEP(150);
     }
+
+    return true; // return ke menu
 }
 
 // ======================= Startup Menu =======================
-
 bool showStartMenu()
 {
     while (true)
     {
         fullClearScreen();
 
+        // ASCII art CNAKE horizontal
         std::cout << "\033[1;32m"; // hijau terang
         std::cout << R"(
-   ____ _   _    _    _  ________
-  / ___| \ | |  / \  | |/ /|  ___|
- | |   |  \| | / _ \ | ' / |  __|
- | |___| |\  |/ ___ \| . \ | |___
-  \____|_| \_/_/   \_\_|\_\|_____|
-)" << "\n";
-        std::cout << "\033[0m"; // reset warna
+  ____   _   _    _    _  __ _____
+ / ___| | \ | |  / \  | |/ /| ____|
+| |     |  \| | / _ \ | ' / |  _|
+| |___  | |\  |/ ___ \| . \ | |___
+ \____| |_| \_/_/   \_\_|\_\|_____|
+)" << "\033[0m" << "\n";
 
         std::cout << "========================================\n";
-        std::cout << "           CNAKE DEMO v1.0              \n";
-        std::cout << "          Author: Andhika               \n";
+        std::cout << "           CNAKE DEMO v0.1              \n";
+        std::cout << "          Author: Andhika R.            \n";
         std::cout << "========================================\n\n";
 
         // Menu pilihan
@@ -169,47 +158,44 @@ bool showStartMenu()
         char choice;
         std::cin >> choice;
 
-        if (choice == '1')
-            return true;
-        else if (choice == '2')
-            return false;
+        if (choice == '1') return true;
+        else if (choice == '2') return false;
     }
 }
 
 // ======================= Main =======================
-
 int main()
 {
     enableANSI();
     hideCursor();
 
-    bool play = showStartMenu();
-    if (!play)
+    bool exitProgram = false;
+
+    while (!exitProgram)
     {
-        showCursor();
-        return 0;
+        bool play = showStartMenu();
+        if (!play) { exitProgram = true; break; }
+
+        const int rows = 12;
+        const int cols = 20;
+
+        // Petunjuk kontrol
+        fullClearScreen();
+        std::cout << "\033[1;33m"; // kuning terang
+        std::cout << "Controls:\n";
+        std::cout << "  W = Up\n";
+        std::cout << "  A = Left\n";
+        std::cout << "  S = Down\n";
+        std::cout << "  D = Right\n";
+        std::cout << "  Q = Quit (back to menu)\n";
+        std::cout << "\033[0m";
+
+        waitAnyKey();
+        fullClearScreen();
+
+        Space space(rows, cols);
+        gameLoop(space);
     }
-
-    // default grid 12x20
-    const int rows = 12;
-    const int cols = 20;
-
-    // Tampilkan petunjuk kontrol
-    fullClearScreen();
-    std::cout << "\033[1;33m"; // kuning terang
-    std::cout << "Controls:\n";
-    std::cout << "  W = Up\n";
-    std::cout << "  A = Left\n";
-    std::cout << "  S = Down\n";
-    std::cout << "  D = Right\n";
-    std::cout << "  Q = Quit\n";
-    std::cout << "\033[0m"; // reset warna
-
-    waitAnyKey();
-    fullClearScreen();
-
-    Space space(rows, cols);
-    gameLoop(space);
 
     showCursor();
     return 0;
