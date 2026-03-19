@@ -1,7 +1,8 @@
 #include "space.h"
 #include <iostream>
+#include <random>
 
-Space::Space(int nRow, int nCol) : nRow(nRow), nCol(nCol), snake(nRow, nCol), apple(nRow, nCol) {
+Space::Space(int nRow, int nCol) : nRow(nRow), nCol(nCol), snake(nRow, nCol), apple() {
     grid.resize(nRow, std::vector<char>(nCol, '.'));
 }
 
@@ -48,7 +49,25 @@ void Space::updateSnake(Direction newDirection) {
 
 // generate apple baru
 void Space::spawnApple() {
-    apple = Apple(nRow, nCol);
+    int minX = 0, maxX = nRow - 1;
+    int minY = 0, maxY = nCol - 1;
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+
+    std::uniform_int_distribution<> distX(minX, maxX);
+    std::uniform_int_distribution<> distY(minY, maxY);
+
+    int x;
+    int y;
+
+    do
+    {
+        x = distX(gen);
+        y = distY(gen);
+    } while (grid[x][y] != '.');
+
+    apple = Apple(x, y, 1);
 }
 
 // render ke grid internal

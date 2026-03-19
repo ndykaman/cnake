@@ -9,7 +9,7 @@ private:
 
 public:
     Apple();
-    Apple(int nRow, int nCol);
+    Apple(int x, int y, int value);
 
     Coordinate getCoordinate() const;
     int getValue() const;
