@@ -61,30 +61,42 @@ int _getch()
 
 // ======================= UI =======================
 
-void hideCursor()
+void hideCursor() { std::cout << "\033[?25l"; }
+void showCursor() { std::cout << "\033[?25h"; }
+void fullClearScreen() { std::cout << "\033[2J\033[H" << std::flush; }
+
+void enableANSI()
 {
-    std::cout << "\e[?25l";
+#ifdef _WIN32
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (hOut != INVALID_HANDLE_VALUE)
+    {
+        DWORD dwMode = 0;
+        if (GetConsoleMode(hOut, &dwMode))
+        {
+            SetConsoleMode(hOut, dwMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+        }
+    }
+#endif
 }
 
-void showCursor()
+void waitAnyKey()
 {
-    std::cout << "\033[?25l";
+    std::cout << "\nPress any key to continue...";
+    while (!_kbhit())
+    {
+        SLEEP(50);
+    }
+    _getch();
 }
 
-// ======================= Input =======================
-
-void inputGridSize(int &r, int &c)
-{
-    std::cout << "Enter grid size (rows cols): ";
-    std::cin >> r >> c;
-}
+// ======================= Input / Game Loop =======================
 
 Direction getInputDirection(Direction currentDir, bool &running)
 {
     while (_kbhit())
     {
         char key = _getch();
-
         Direction inputDir = currentDir;
 
         if (key == 'w')
@@ -103,11 +115,8 @@ Direction getInputDirection(Direction currentDir, bool &running)
             currentDir = inputDir;
         }
     }
-
     return currentDir;
 }
-
-// ======================= Game Loop =======================
 
 void gameLoop(Space &space)
 {
@@ -128,25 +137,43 @@ void gameLoop(Space &space)
     }
 }
 
-void enableANSI()
-{
-#ifdef _WIN32
-    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    DWORD dwMode = 0;
-    GetConsoleMode(hOut, &dwMode);
-    if (hOut != INVALID_HANDLE_VALUE)
-    {
-        DWORD dwMode = 0;
-        if (GetConsoleMode(hOut, &dwMode))
-        {
-            SetConsoleMode(hOut, dwMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-        }
-    }
-#endif
-}
+// ======================= Startup Menu =======================
 
-void fullClearScreen() {
-    std::cout << "\033[2J\033[H" << std::flush;
+bool showStartMenu()
+{
+    while (true)
+    {
+        fullClearScreen();
+
+        std::cout << "\033[1;32m"; // hijau terang
+        std::cout << R"(
+   ____ _   _    _    _  ________
+  / ___| \ | |  / \  | |/ /|  ___|
+ | |   |  \| | / _ \ | ' / |  __|
+ | |___| |\  |/ ___ \| . \ | |___
+  \____|_| \_/_/   \_\_|\_\|_____|
+)" << "\n";
+        std::cout << "\033[0m"; // reset warna
+
+        std::cout << "========================================\n";
+        std::cout << "           CNAKE DEMO v1.0              \n";
+        std::cout << "          Author: Andhika               \n";
+        std::cout << "========================================\n\n";
+
+        // Menu pilihan
+        std::cout << "Select an option:\n";
+        std::cout << "1. Play\n";
+        std::cout << "2. Exit\n";
+        std::cout << "\nEnter choice (1-2): ";
+
+        char choice;
+        std::cin >> choice;
+
+        if (choice == '1')
+            return true;
+        else if (choice == '2')
+            return false;
+    }
 }
 
 // ======================= Main =======================
@@ -154,18 +181,34 @@ void fullClearScreen() {
 int main()
 {
     enableANSI();
-
-    fullClearScreen();
-
     hideCursor();
 
-    int r, c;
-    inputGridSize(r, c);
+    bool play = showStartMenu();
+    if (!play)
+    {
+        showCursor();
+        return 0;
+    }
 
+    // default grid 12x20
+    const int rows = 12;
+    const int cols = 20;
+
+    // Tampilkan petunjuk kontrol
+    fullClearScreen();
+    std::cout << "\033[1;33m"; // kuning terang
+    std::cout << "Controls:\n";
+    std::cout << "  W = Up\n";
+    std::cout << "  A = Left\n";
+    std::cout << "  S = Down\n";
+    std::cout << "  D = Right\n";
+    std::cout << "  Q = Quit\n";
+    std::cout << "\033[0m"; // reset warna
+
+    waitAnyKey();
     fullClearScreen();
 
-    Space space(r, c);
-
+    Space space(rows, cols);
     gameLoop(space);
 
     showCursor();
