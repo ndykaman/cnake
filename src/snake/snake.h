@@ -25,6 +25,7 @@ public:
     Coordinate getHead() const;
     Direction getDirection() const;
     const std::vector<Coordinate>& getBody() const;
+    SnakeStatus getStatus() const;
 
     void move(int nRow, int nCol, Direction newDirection);
     void eatApple();

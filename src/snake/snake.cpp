@@ -124,3 +124,7 @@ int Snake::getLength() const {
 Direction Snake::getDirection() const {
     return direction;
 }
+
+SnakeStatus Snake::getStatus() const {
+    return status;
+}
