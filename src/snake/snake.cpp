@@ -1,130 +1,69 @@
 #include "snake.h"
+#include "../utils/utils.h"
 #include <random>
 
-const int INITIAL_SNAKE_LEN = 5;
+static constexpr int INITIAL_SNAKE_LEN = 5;
 
-// arah gerak ke depan (movement)
-const int MOVE_DX[4] = {-1, 0, 1, 0};
-const int MOVE_DY[4] = {0, 1, 0, -1};
+Snake::Snake() : head({0, 0}), direction(Direction::East),
+                 length(1), status(SnakeStatus::Alive) {}
 
-// arah kebalikan (untuk nyusun badan awal)
-const int BODY_DX[4] = {1, 0, -1, 0};
-const int BODY_DY[4] = {0, -1, 0, 1};
-
-// helper wrap biar gak ngulang
-int wrap(int value, int mod) {
-    value %= mod;
-    if (value < 0) value += mod;
-    return value;
-}
-
-// default constructor
-Snake::Snake() {
-    length = 1;
-    head = {0, 0};
-    direction = Direction::East;
-    status = SnakeStatus::Alive;
-}
-
-// constructor dengan random spawn
-Snake::Snake(int nRow, int nCol) {
-    length = INITIAL_SNAKE_LEN;
-
-    int minX = INITIAL_SNAKE_LEN - 3;
-    int maxX = nRow - INITIAL_SNAKE_LEN + 3;
-    int minY = INITIAL_SNAKE_LEN - 3;
-    int maxY = nCol - INITIAL_SNAKE_LEN + 3;
-
-    std::random_device rd;
-    std::mt19937 gen(rd());
-
-    std::uniform_int_distribution<> distX(minX, maxX);
-    std::uniform_int_distribution<> distY(minY, maxY);
+Snake::Snake(int nRow, int nCol) : length(INITIAL_SNAKE_LEN), status(SnakeStatus::Alive) {
+    // Keep the initial body fully inside the grid by shrinking the spawn zone.
+    const int margin = INITIAL_SNAKE_LEN - 3;
+    std::uniform_int_distribution<> distX(margin, nRow - 1 - margin);
+    std::uniform_int_distribution<> distY(margin, nCol - 1 - margin);
     std::uniform_int_distribution<> distD(0, 3);
 
-    int x = distX(gen);
-    int y = distY(gen);
-    int d = distD(gen);
+    std::mt19937 gen{std::random_device{}()};
 
-    head = {x, y};
-    direction = static_cast<Direction>(d);
-    status = SnakeStatus::Alive;
+    head      = {distX(gen), distY(gen)};
+    direction = static_cast<Direction>(distD(gen));
 
-    // build body ke arah belakang dari head
-    for (int i = 1; i < length; i++) {
-        int newX = head.x + i * BODY_DX[(int)direction];
-        int newY = head.y + i * BODY_DY[(int)direction];
-
-        newX = wrap(newX, nRow);
-        newY = wrap(newY, nCol);
-
-        body.push_back({newX, newY});
+    // Build body segments extending away from the head so they don't overlap it.
+    body.reserve(length - 1);
+    for (int i = 1; i < length; ++i) {
+        body.push_back({
+            wrap(head.x + i * BODY_DX[(int)direction], nRow),
+            wrap(head.y + i * BODY_DY[(int)direction], nCol)
+        });
     }
 }
 
-// gerak snake
 void Snake::move(int nRow, int nCol, Direction newDirection) {
-    Direction curDirection = direction;
+    if (isOppositeDirection(direction, newDirection)) return;
 
-    bool isOpposite = abs((int)curDirection - (int)newDirection) == 2;
-    if (isOpposite) return;
-
-    Coordinate newHead = {
-        head.x + MOVE_DX[(int)newDirection],
-        head.y + MOVE_DY[(int)newDirection]
-    };
-
-    newHead.x = wrap(newHead.x, nRow);
-    newHead.y = wrap(newHead.y, nCol);
-
-    for (int i = length - 2; i > 0; i--) {
+    // Shift every body segment one step toward the head before advancing the head.
+    for (int i = (int)body.size() - 1; i > 0; --i)
         body[i] = body[i - 1];
-    }
-
     body[0] = head;
-    head = newHead;
+
+    head = {
+        wrap(head.x + MOVE_DX[(int)newDirection], nRow),
+        wrap(head.y + MOVE_DY[(int)newDirection], nCol)
+    };
     direction = newDirection;
 }
 
-// makan apel → nambah panjang
-void Snake::eatApple(Apple apple) {
-    const Coordinate &tail = body.back();
-    const Coordinate &beforeTail = body[length - 2];
-
-    int dx = tail.x - beforeTail.x;
-    int dy = tail.y - beforeTail.y;
+void Snake::grow(const Apple& apple) {
+    // Extrapolate one segment past the current tail in the same direction as the tail.
+    const Coordinate& tail       = body.back();
+    const Coordinate& beforeTail = body[body.size() - 2];
 
     Coordinate newTail = {
-        tail.x + dx,
-        tail.y + dy
+        tail.x + (tail.x - beforeTail.x),
+        tail.y + (tail.y - beforeTail.y)
     };
 
+    for (int i = 0; i < apple.getValue(); ++i)
+        body.push_back(newTail);
+
     length += apple.getValue();
-    body.push_back(newTail);
 }
 
-// mabrak badan sendiri -> dead
-void Snake::dead() {
-    status = SnakeStatus::Dead;
-}
+void Snake::kill() { status = SnakeStatus::Dead; }
 
-// getter
-Coordinate Snake::getHead() const {
-    return head;
-}
-
-const std::vector<Coordinate>& Snake::getBody() const {
-    return body;
-}
-
-int Snake::getLength() const {
-    return length;
-}
-
-Direction Snake::getDirection() const {
-    return direction;
-}
-
-SnakeStatus Snake::getStatus() const {
-    return status;
-}
+int                          Snake::getLength()    const { return length; }
+Coordinate                   Snake::getHead()      const { return head; }
+Direction                    Snake::getDirection() const { return direction; }
+const std::vector<Coordinate>& Snake::getBody()   const { return body; }
+SnakeStatus                  Snake::getStatus()    const { return status; }

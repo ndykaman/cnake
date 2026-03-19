@@ -1,34 +1,38 @@
 #pragma once
 
-#include "apple/apple.h"
-#include "direction/direction.h"
-#include "snake/snake.h"
+#include "../apple/apple.h"
+#include "../direction/direction.h"
+#include "../snake/snake.h"
 #include <vector>
 
+// Owns the game world: the grid, the snake, and the current apple.
+// Each game tick, call updateSnake() then render() + print() to advance state.
 class Space {
 private:
-    int nRow;
-    int nCol;
-    Snake snake;
-    Apple apple;
+    int                          nRow;
+    int                          nCol;
+    Snake                        snake;
+    Apple                        apple;
     std::vector<std::vector<char>> grid;
 
-    // helper wrap posisi (bisa dipakai kalau perlu)
-    int wrap(int value, int mod) const;
+    // Chooses a random empty cell and places a new apple there.
+    void spawnApple();
 
 public:
     Space(int nRow, int nCol);
 
-    // update snake, handle apple
+    // Moves the snake in `newDirection`, handles apple consumption and self-collision.
     void updateSnake(Direction newDirection);
 
-    // spawn apple baru
-    void spawnApple();
-
-    // render & print
+    // Writes the current game state into the internal character grid.
     void render();
+
+    // Prints the character grid to stdout, one row per line.
     void print() const;
 
-    // cek ular masih hidup atau tidak
-    bool isSnakeAlive();
+    // Returns true while the snake has not collided with itself.
+    bool isSnakeAlive() const;
+
+    // Returns the player's current score (snake length minus initial length).
+    int getScore() const;
 };

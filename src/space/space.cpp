@@ -1,123 +1,109 @@
 #include "space.h"
+#include "../utils/utils.h"
 #include <iostream>
 #include <random>
 
-Space::Space(int nRow, int nCol) : nRow(nRow), nCol(nCol), snake(nRow, nCol), apple() {
-    grid.resize(nRow, std::vector<char>(nCol, '.'));
+static constexpr int INITIAL_SNAKE_LEN = 5;
+
+Space::Space(int nRow, int nCol)
+    : nRow(nRow), nCol(nCol),
+      snake(nRow, nCol), apple(),
+      grid(nRow, std::vector<char>(nCol, '.')) {
+    spawnApple();
 }
 
-// helper wrap
-int Space::wrap(int value, int mod) const {
-    value %= mod;
-    if (value < 0) value += mod;
-    return value;
-}
-
-// update snake & handle apple
 void Space::updateSnake(Direction newDirection) {
-    const Coordinate &curHead = snake.getHead();
-    const Coordinate &appleCoord = apple.getCoordinate();
-    Coordinate newHead;
+    if (isOppositeDirection(snake.getDirection(), newDirection)) return;
 
-    // larang snake balik arah
-    if (abs((int)snake.getDirection() - (int)newDirection) == 2) return;
-
-    // arah gerak
-    const int DX[4] = {-1, 0, 1, 0};
-    const int DY[4] = {0, 1, 0, -1};
-
-    newHead = {
-        wrap(curHead.x + DX[(int)newDirection], nRow),
-        wrap(curHead.y + DY[(int)newDirection], nCol)
+    // Calculate where the head will land after this move.
+    const Coordinate& curHead = snake.getHead();
+    Coordinate newHead = {
+        wrap(curHead.x + MOVE_DX[(int)newDirection], nRow),
+        wrap(curHead.y + MOVE_DY[(int)newDirection], nCol)
     };
 
-    // makan apel
-    if (newHead.x == appleCoord.x && newHead.y == appleCoord.y) {
-        snake.eatApple(apple);
-        spawnApple();
-    }
+    // Check for apple consumption before moving so the tail is still in place.
+    const Coordinate& applePos = apple.getCoordinate();
+    bool ateApple = (newHead.x == applePos.x && newHead.y == applePos.y);
 
-    // nabrak badan sendiri
-    for(auto [x,y] : snake.getBody()) {
-        if(newHead.x == x && newHead.y == y) {
-            snake.dead();
+    // Check for self-collision: the new head must not overlap any body segment.
+    for (const auto& [x, y] : snake.getBody()) {
+        if (newHead.x == x && newHead.y == y) {
+            snake.kill();
+            return;
         }
     }
 
     snake.move(nRow, nCol, newDirection);
+
+    if (ateApple) {
+        snake.grow(apple);
+        spawnApple();
+    }
 }
 
-// generate apple baru
 void Space::spawnApple() {
-    int minX = 0, maxX = nRow - 1;
-    int minY = 0, maxY = nCol - 1;
+    // Collect every cell that is not occupied by the snake, then pick one at random.
+    std::vector<Coordinate> emptyCells;
+    emptyCells.reserve(nRow * nCol);
 
-    std::random_device rd;
-    std::mt19937 gen(rd());
+    const Coordinate&              head = snake.getHead();
+    const std::vector<Coordinate>& body = snake.getBody();
 
-    std::uniform_int_distribution<> distX(minX, maxX);
-    std::uniform_int_distribution<> distY(minY, maxY);
+    for (int r = 0; r < nRow; ++r) {
+        for (int c = 0; c < nCol; ++c) {
+            bool occupied = (r == head.x && c == head.y);
+            for (const auto& [bx, by] : body)
+                if (r == bx && c == by) { occupied = true; break; }
+            if (!occupied) emptyCells.push_back({r, c});
+        }
+    }
 
-    int x;
-    int y;
+    if (emptyCells.empty()) return; // Grid is completely full — no space for an apple.
 
-    do
-    {
-        x = distX(gen);
-        y = distY(gen);
-    } while (grid[x][y] != '.');
-
-    apple = Apple(x, y, 1);
+    std::mt19937 gen{std::random_device{}()};
+    std::uniform_int_distribution<> dist(0, (int)emptyCells.size() - 1);
+    const Coordinate& chosen = emptyCells[dist(gen)];
+    apple = Apple(chosen.x, chosen.y, 1);
 }
 
-// render ke grid internal
 void Space::render() {
-    // clear grid
-    for (auto &row : grid)
-        for (auto &c : row) c = '.';
+    // Reset every cell to the empty character before drawing game objects.
+    for (auto& row : grid)
+        for (auto& c : row) c = '.';
 
-    const Coordinate &head = snake.getHead();
-    const Direction &dir = snake.getDirection();
-    const Coordinate &appleCoord = apple.getCoordinate();
-    const auto &body = snake.getBody();
+    const Coordinate&              head     = snake.getHead();
+    const std::vector<Coordinate>& body     = snake.getBody();
+    const Direction&               dir      = snake.getDirection();
+    const Coordinate&              applePos = apple.getCoordinate();
 
-    // apple
-    grid[appleCoord.x][appleCoord.y] = '@';
+    grid[applePos.x][applePos.y] = '@';
 
-    // jika ular sudah mati
-    if(snake.getStatus() == SnakeStatus::Dead) {
-        // head
+    if (snake.getStatus() == SnakeStatus::Dead) {
+        // Replace the entire snake with '*' to visualise the crash site.
         grid[head.x][head.y] = '*';
-
-        // body
-        for (auto [x, y] : body)
-            grid[x][y] = '*';
-        
-            return;
+        for (const auto& [x, y] : body) grid[x][y] = '*';
+        return;
     }
 
-    // head
-    switch ((int)dir) {
-        case 0: grid[head.x][head.y] = '^'; break;
-        case 1: grid[head.x][head.y] = '>'; break;
-        case 2: grid[head.x][head.y] = 'v'; break;
-        case 3: grid[head.x][head.y] = '<'; break;
-    }
+    // Draw the head as a direction arrow so the player can see where it's headed.
+    constexpr char HEAD_CHAR[4] = {'^', '>', 'v', '<'};
+    grid[head.x][head.y] = HEAD_CHAR[(int)dir];
 
-    // body
-    for (auto [x, y] : body)
-        grid[x][y] = '#';
+    for (const auto& [x, y] : body) grid[x][y] = '#';
 }
 
-// print ke console
 void Space::print() const {
-    for (const auto &row : grid) {
-        for (const auto &c : row) std::cout << c;
-        std::cout << "\n";
+    for (const auto& row : grid) {
+        for (const auto& c : row) std::cout << c;
+        std::cout << '\n';
     }
 }
 
-// cek ular masih hidup atau tidak
-bool Space::isSnakeAlive() {
+bool Space::isSnakeAlive() const {
     return snake.getStatus() == SnakeStatus::Alive;
+}
+
+int Space::getScore() const {
+    return snake.getLength() - INITIAL_SNAKE_LEN;
 }
