@@ -87,7 +87,7 @@ void Snake::move(int nRow, int nCol, Direction newDirection) {
 }
 
 // makan apel → nambah panjang
-void Snake::eatApple() {
+void Snake::eatApple(Apple apple) {
     const Coordinate &tail = body.back();
     const Coordinate &beforeTail = body[length - 2];
 
@@ -99,7 +99,7 @@ void Snake::eatApple() {
         tail.y + dy
     };
 
-    length++;
+    length += apple.getValue();
     body.push_back(newTail);
 }
 

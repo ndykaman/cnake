@@ -32,7 +32,7 @@ void Space::updateSnake(Direction newDirection) {
 
     // makan apel
     if (newHead.x == appleCoord.x && newHead.y == appleCoord.y) {
-        snake.eatApple();
+        snake.eatApple(apple);
         spawnApple();
     }
 

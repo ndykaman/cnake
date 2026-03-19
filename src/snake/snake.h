@@ -2,6 +2,7 @@
 
 #include "coordinate/coordinate.h"
 #include "direction/direction.h"
+#include "../apple/apple.h"
 #include <vector>
 
 enum class SnakeStatus {
@@ -28,6 +29,6 @@ public:
     SnakeStatus getStatus() const;
 
     void move(int nRow, int nCol, Direction newDirection);
-    void eatApple();
+    void eatApple(Apple apple);
     void dead();
 };
