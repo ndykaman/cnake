@@ -44,14 +44,14 @@ void Snake::move(int nRow, int nCol, Direction newDirection) {
     direction = newDirection;
 }
 
-void Snake::grow(const Apple& apple) {
+void Snake::grow(const Apple& apple, int nRow, int nCol) {
     // Extrapolate one segment past the current tail in the same direction as the tail.
     const Coordinate& tail       = body.back();
     const Coordinate& beforeTail = body[body.size() - 2];
 
     Coordinate newTail = {
-        tail.x + (tail.x - beforeTail.x),
-        tail.y + (tail.y - beforeTail.y)
+        wrap(tail.x + (tail.x - beforeTail.x), nRow),
+        wrap(tail.y + (tail.y - beforeTail.y), nCol)
     };
 
     for (int i = 0; i < apple.getValue(); ++i)
