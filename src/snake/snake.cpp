@@ -103,6 +103,11 @@ void Snake::eatApple() {
     body.push_back(newTail);
 }
 
+// mabrak badan sendiri -> dead
+void Snake::dead() {
+    status = SnakeStatus::Dead;
+}
+
 // getter
 Coordinate Snake::getHead() const {
     return head;

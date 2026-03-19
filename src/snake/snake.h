@@ -28,4 +28,5 @@ public:
 
     void move(int nRow, int nCol, Direction newDirection);
     void eatApple();
+    void dead();
 };
