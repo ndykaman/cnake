@@ -111,7 +111,7 @@ bool gameLoop(Space &space)
     Direction currentDir = Direction::East;
     bool running = true;
 
-    while (running && space.isSnakeAlive())
+    while (running)
     {
         currentDir = getInputDirection(currentDir, running);
 
@@ -120,6 +120,12 @@ bool gameLoop(Space &space)
         clearScreen();
         space.render();
         space.print();
+
+        if(!space.isSnakeAlive()) {
+            std::cout << "Game over...\n";
+            SLEEP(3000);
+            break;
+        }
 
         SLEEP(150);
     }
