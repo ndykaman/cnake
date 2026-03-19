@@ -65,6 +65,18 @@ void Space::render() {
     // apple
     grid[appleCoord.x][appleCoord.y] = '@';
 
+    // jika ular sudah mati
+    if(snake.getStatus() == SnakeStatus::Dead) {
+        // head
+        grid[head.x][head.y] = '*';
+
+        // body
+        for (auto [x, y] : body)
+            grid[x][y] = '*';
+        
+            return;
+    }
+
     // head
     switch ((int)dir) {
         case 0: grid[head.x][head.y] = '^'; break;
