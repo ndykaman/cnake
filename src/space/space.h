@@ -28,4 +28,7 @@ public:
     // render & print
     void render();
     void print() const;
+
+    // cek ular masih hidup atau tidak
+    bool isSnakeAlive();
 };

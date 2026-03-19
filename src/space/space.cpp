@@ -85,3 +85,8 @@ void Space::print() const {
         std::cout << "\n";
     }
 }
+
+// cek ular masih hidup atau tidak
+bool Space::isSnakeAlive() {
+    return snake.getStatus() == SnakeStatus::Alive;
+}
