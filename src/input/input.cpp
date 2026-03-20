@@ -8,6 +8,7 @@
   #include <termios.h>
   #include <unistd.h>
   #include <fcntl.h>
+  #include <cstdio>
   #define SLEEP(ms) usleep((ms) * 1000)
 
 static int _kbhit() {
