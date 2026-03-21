@@ -3,6 +3,10 @@
 #include <iostream>
 #include <random>
 
+#define GREEN "\033[32m"
+#define RESET "\033[0m"
+#define RED "\033[31m"
+
 static constexpr int INITIAL_SNAKE_LEN = 5;
 
 Space::Space(int nRow, int nCol)
@@ -97,9 +101,17 @@ void Space::render() {
 }
 
 void Space::print() const {
-    for (const auto& row : grid) {
-        for (const auto& c : row) std::cout << c;
-        std::cout << '\n';
+    for(const auto &row : grid) {
+        for(const auto &c : row) {
+            if(c == '#' || c == 'v' || c == '^' || c == '>' || c == '<') {
+                std::cout << GREEN << c << RESET;
+            } else if(c == '@') {
+                std::cout << RED << c << RESET;
+            } else {
+                std::cout << c;
+            }
+        }
+        std::cout << "\n";
     }
 }
 
