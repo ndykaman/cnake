@@ -38,25 +38,65 @@ static const char* BANNER = R"(
 )";
 
 bool showStartMenu() {
+    int selected = 0; // 0 = Play, 1 = Exit
+
     while (true) {
         clearScreen();
 
         std::cout << "\033[1;32m" << BANNER << "\033[0m\n";
         std::cout << "========================================\n";
-        std::cout << "           CNAKE DEMO v0.1              \n";
-        std::cout << "          Author: Andhika R.            \n";
+        std::cout << "   CNAKE v0.1 on ";
+        
+    #ifdef _WIN32
+        std::cout << "Windows";
+    #else
+        std::cout << "Linux";
+    #endif
+
+        std::cout << "\n   A Terminal-based Snake Game\n";
+        std::cout << "   By Andhika Rahman\n";
         std::cout << "========================================\n\n";
 
-        std::cout << "Select an option:\n";
-        std::cout << "  1. Play\n";
-        std::cout << "  2. Exit\n";
-        std::cout << "\nEnter choice (1-2): ";
+        // ===== MENU =====
+        if (selected == 0)
+            std::cout << "  \033[4;36m[1] Play\033[0m\n";   // underline + cyan
+        else
+            std::cout << "  [1] Play\n";
 
-        char choice;
-        std::cin >> choice;
+        if (selected == 1)
+            std::cout << "  \033[4;36m[2] Exit\033[0m\n";
+        else
+            std::cout << "  [2] Exit\n";
 
-        if (choice == '1') return true;
-        if (choice == '2') return false;
+        // ===== INPUT =====
+    #ifdef _WIN32
+        char key = _getch();
+
+        if (key == -32) { // arrow key
+            key = _getch();
+            if (key == 72) selected--; // UP
+            if (key == 80) selected++; // DOWN
+        } else if (key == '\r') {
+            return selected == 0;
+        }
+
+    #else
+        char key = getchar();
+
+        if (key == '\033') { // escape sequence
+            getchar(); // skip '['
+            char dir = getchar();
+
+            if (dir == 'A') selected--; // UP
+            if (dir == 'B') selected++; // DOWN
+        } else if (key == '\n') {
+            return selected == 0;
+        }
+    #endif
+
+        // wrap biar looping
+        if (selected < 0) selected = 1;
+        if (selected > 1) selected = 0;
     }
 }
 
