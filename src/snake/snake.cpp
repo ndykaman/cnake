@@ -46,6 +46,8 @@ void Snake::move(int nRow, int nCol, Direction newDirection) {
 
 void Snake::grow(const Apple& apple, int nRow, int nCol) {
     for(int i = 0; i < apple.getValue(); i++) {
+
+        // Extrapolate one segment past the current tail in the same direction as the tail.
         const Coordinate &tail = body.back();
         const Coordinate &beforeTail = body[body.size() - 2];
 
