@@ -45,19 +45,33 @@ void Snake::move(int nRow, int nCol, Direction newDirection) {
 }
 
 void Snake::grow(const Apple& apple, int nRow, int nCol) {
-    // Extrapolate one segment past the current tail in the same direction as the tail.
-    const Coordinate& tail       = body.back();
-    const Coordinate& beforeTail = body[body.size() - 2];
+    // // Extrapolate one segment past the current tail in the same direction as the tail.
+    // const Coordinate& tail       = body.back();
+    // const Coordinate& beforeTail = body[body.size() - 2];
 
-    Coordinate newTail = {
-        wrap(tail.x + (tail.x - beforeTail.x), nRow),
-        wrap(tail.y + (tail.y - beforeTail.y), nCol)
-    };
+    // Coordinate newTail = {
+    //     wrap(tail.x + (tail.x - beforeTail.x), nRow),
+    //     wrap(tail.y + (tail.y - beforeTail.y), nCol)
+    // };
 
-    for (int i = 0; i < apple.getValue(); ++i)
+    // for (int i = 0; i < apple.getValue(); ++i)
+    //     body.push_back(newTail);
+
+    // length += apple.getValue();
+
+    for(int i = 0; i < apple.getValue(); i++) {
+        const Coordinate &tail = body.back();
+        const Coordinate &beforeTail = body[body.size() - 2];
+
+        Coordinate newTail = {
+            wrap(tail.x + (tail.x - beforeTail.x), nRow),
+            wrap(tail.y + (tail.y - beforeTail.y), nCol)
+        };
+
         body.push_back(newTail);
 
-    length += apple.getValue();
+        length++;
+    }
 }
 
 void Snake::kill() { status = SnakeStatus::Dead; }
