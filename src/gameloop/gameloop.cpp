@@ -28,9 +28,7 @@ bool runGameLoop(Space& space) {
           space.updateSnake(newDir);
           currentDir = newDir;
         }
-
-        // space.updateSnake(currentDir);
-
+        
         // Redraw in-place each tick to avoid full-screen flicker.
         clearScreenFast();
         space.render();
