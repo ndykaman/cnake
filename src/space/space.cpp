@@ -126,3 +126,11 @@ int Space::getScore() const {
 int Space::getSnakeLength() const {
     return snake.getLength();
 }
+
+int Space::getNRow() const {
+    return nRow;
+}
+
+int Space::getNCol() const {
+    return nCol;
+}

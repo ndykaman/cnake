@@ -38,4 +38,10 @@ public:
 
     // Returns current snake's length
     int getSnakeLength() const;
+
+    // Returns the number of rows in the grid
+    int getNRow() const;
+
+    // Returns the number of columns in the grid
+    int getNCol() const;
 };
