@@ -3,8 +3,8 @@
 #include "space/space.h"
 #include "ui/ui.h"
 
-static constexpr int GRID_ROWS = 12;
-static constexpr int GRID_COLS = 20;
+static constexpr int GRID_ROWS = 18;
+static constexpr int GRID_COLS = 35;
 
 int main() {
     enableANSI();
