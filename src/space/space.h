@@ -35,4 +35,7 @@ public:
 
     // Returns the player's current score (snake length minus initial length).
     int getScore() const;
+
+    // Returns current snake's length
+    int getSnakeLength() const;
 };

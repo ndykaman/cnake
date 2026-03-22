@@ -122,3 +122,7 @@ bool Space::isSnakeAlive() const {
 int Space::getScore() const {
     return snake.getLength() - INITIAL_SNAKE_LEN;
 }
+
+int Space::getSnakeLength() const {
+    return snake.getLength();
+}
