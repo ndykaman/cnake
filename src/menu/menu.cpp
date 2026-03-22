@@ -49,8 +49,12 @@ bool showStartMenu() {
         
     #ifdef _WIN32
         std::cout << "Windows";
-    #else
+    #elif defined(__APPLE__) && defined(__MACH__)
+        std::cout << "macOS";
+    #elif defined(__linux__)
         std::cout << "Linux";
+    #else
+        std::cout << "Unknown OS";
     #endif
 
         std::cout << "\n   A Terminal-based Snake Game\n";
