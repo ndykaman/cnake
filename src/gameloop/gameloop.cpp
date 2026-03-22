@@ -13,6 +13,7 @@
 
 static constexpr int TICK_MS         = 150; // Milliseconds between game ticks.
 static constexpr int DEATH_LINGER_MS = 3000; // How long to show the death screen.
+static constexpr int WIN_LINGER_MS = 3000; // How long to show the win screen.
 
 bool runGameLoop(Space& space) {
     Direction currentDir = Direction::East;
@@ -40,6 +41,12 @@ bool runGameLoop(Space& space) {
         if (!space.isSnakeAlive()) {
             std::cout << "\nGame over! Final score: " << space.getScore() << '\n';
             SLEEP(DEATH_LINGER_MS);
+            break;
+        }
+
+        if(space.getSnakeLength() == space.getNRow() * space.getNCol()) {
+            std::cout << "\nCongratulations, you have completed this game!";
+            SLEEP(WIN_LINGER_MS);
             break;
         }
 
